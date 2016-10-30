@@ -28,7 +28,7 @@ default. This package is pretty useless with a KOMA class.
 4. Once the the files are properly set up, you can use the
    package like any other LaTeX package.
 
-### Available options
+## Available options
 
 - silent   
 Suppress the warning that is printed in the log file and the
@@ -37,7 +37,7 @@ terminal output
 - indentunnumbered    
 Indent the unnumbered entries in the table of contents
 
-## Usage and eExample file 
+## Usage and example file 
 
 ```source=LaTeX
 \documentclass{book}
