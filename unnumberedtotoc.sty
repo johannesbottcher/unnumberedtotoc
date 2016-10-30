@@ -16,119 +16,98 @@
 % Copyright 2014 - 2016 Johannes Böttcher
 % This is an alpha Version. Please be aware that there is
 % absolutely no warranty and use this package at your own risk
+% 
+% Functionality and implementation heavily based on KOMA-script
 
- \ProvidesPackage{unnumberedtotoc}[2016/10/09 v.02 unnumbered chapters and sectionsto toc]
- \RequirePackage{etoolbox}
+\ProvidesPackage{unnumberedtotoc}[2016/10/30 v.03 unnumbered chapters and sections to toc]
+\RequirePackage{etoolbox}
 
- \ifundef{\KOMAClassName}{%
-  \PackageWarningNoLine{unnumberedtotoc}{%
-   ^^J adding some features also provided by the KOMA classes.
-   ^^J Consider switching, as there are much more features with KOMA.
-   ^^J Found at: https://github.com/johannesbottcher/unnumberedtotoc
-  }
-  \@ifclassloaded{memoir}{
-   \typeout{Sorry, this wasn't tested with `memoir'}
-  }{
-  }
- }{\PackageInfo{unnumberedtotoc}{You are using a KOMA
- class. Not much to do for me here. Setting the options
+
+\newbool{@indentunnumbered}
+\newbool{@silent}
+\DeclareOption{indentunnumbered}{\booltrue{@indentunnumbered}}
+\DeclareOption{silent}{\booltrue{@silent}}
+\ProcessOptions*
+\ifundef{\KOMAClassName}{%
+	\ifbool{@silent}{}{%
+		\PackageWarningNoLine{unnumberedtotoc}{%
+			^^J adding some features also provided by KOMA-script classes.%
+			^^J Consider switching, as there are much more features with KOMA.%
+			^^J Found at: https://github.com/johannesbottcher/unnumberedtotoc%
+		}%
+	}
+	\@ifclassloaded{memoir}{
+		\typeout{Sorry, this wasn't tested with `memoir'}
+	}{
+	}
+}{\PackageInfo{unnumberedtotoc}{You are using a KOMA
+	class. Not much to do for me here. Setting the options
 and that's it}
+\ifbool{@indentunnumbered}{%
+	\@ifpackageloaded{tocbasic}{%
+		\setuptoc{toc}{numberline}%
+	}{}}{}
 }
-
- \RequirePackage{scrlfile}
- \newbool{@indentunnumbered}
- \newbool{@listoftotoc}
- \newbool{@listoftotocnumbered}
- \DeclareOption{indentunnumbered}{\booltrue{@indentunnumbered}}
- \DeclareOption{listoftotoc}{\booltrue{@listoftotoc}}
- \DeclareOption{listoftotocnumbered}{\booltrue{@listoftotocnumbered}}
- \ProcessOptions*
-\RequirePackage{tocbasic}
 \RequirePackage{xparse}
-\ifbool{@indentunnumbered}{
- \AfterPackage*{tocbasic}{\setuptoc{toc}{numberline}}
- \@ifpackageloaded{tocbibind}{\PackageWarningNoLine{unnumberedtotoc}{
-  You loaded package `tocbibind' and requested option
-  `indentunnumbered'. I am using a workaround to get this
-  done
- }}{
-  \PreventPackageFromLoading[
-   \PackageWarningNoLine{unnumberedtotoc}{
-    `tocbibind' is not compatible with this package.^^J
-    Please use the features described in the
-    KOMA-documentation
-   }
-  ]{tocbibind}
- }
-}{}
 
-\providecommand{\listoflotname}{List of Tables}%
-\providecommand{\listoflofname}{List of Figures}%
-\addtotoclist[float]{lof}%
-\addtotoclist[float]{lot}%
-\addtotoclist{toc}%
-\renewcommand{\listoffigures}{\listoftoc{lof}}
-\renewcommand{\listoftables}{\listoftoc{lot}}
+\AtBeginDocument{\providecommand{\MakeMarkcase}{}}
 
-\ifbool{@listoftotocnumbered}{
- \AfterPackage*{unnumberedtotoc}{
-  \doforeachtocfile[float]{\setuptoc{\@currext}{numbered}}
- }
-}{}
-\ifbool{@listoftotoc}{
- \AfterPackage*{unnumberedtotoc}{
-  \doforeachtocfile{\setuptoc{\@currext}{totoc}}
- }
-}{}
-
-\ifdef{\KOMAClassName}{\typeout{I set the appropriate options for
-KOMA. See ya}\endinput}{}
-\renewcommand{\tableofcontents}{\listoftoc{toc}}
-\providecommand*\listoftocname{\contentsname}
-
+\ifbool{@indentunnumbered}{%
+	\AtBeginDocument{%
+		\@ifpackageloaded{tocbibind}{%
+			\PackageWarningNoLine{unnumberedtotoc}{List
+			entries won't be indented}
+		}{}
+	}
+	\providecommand{\nonumberline}{\numberline{}}
+}{%
+	\providecommand{\nonumberline}{}
+}
+\providecommand{\addxcontentsline}[3]{\addcontentsline{#1}{#2}{\nonumberline#3}}
 
 \ProvideDocumentCommand{\addpart}{ s o m }{%
- \part*{#3}%
- \IfBooleanTF{#1}{
- \markboth{}{}
- }{
-  \IfNoValueTF{#2}{
-   \addxcontentsline{toc}{part}{#3}
-   \markboth{\MakeMarkcase{#3}}{}%
-  }{%
-   \addxcontentsline{toc}{part}{#2}
-   \markboth{\MakeMarkcase{#2}}{}%
-  }
- }
+	\part*{#3}%
+	\IfBooleanTF{#1}{
+		\markboth{}{}
+	}{
+		\IfNoValueTF{#2}{
+			\addxcontentsline{toc}{part}{#3}
+			\markboth{\MakeMarkcase{#3}}{}%
+		}{%
+			\addxcontentsline{toc}{part}{#2}
+			\markboth{\MakeMarkcase{#2}}{}%
+		}
+	}
 }
 \ProvideDocumentCommand{\addchap}{ s o m }{%
- \chapter*{#3}%
- \IfBooleanTF{#1}{
- \markboth{}{}
- }{
-  \IfNoValueTF{#2}{
-   \addxcontentsline{toc}{chapter}{#3}
-   \markboth{\MakeMarkcase{#3}}{}%
-  }{%
-   \addxcontentsline{toc}{chapter}{#2}
-   \markboth{\MakeMarkcase{#2}}{}%
-  }
- }
+	\chapter*{#3}%
+	\IfBooleanTF{#1}{
+		\markboth{}{}
+	}{
+		\IfNoValueTF{#2}{
+			\addxcontentsline{toc}{chapter}{#3}
+			\markboth{\MakeMarkcase{#3}}{}%
+		}{%
+			\addxcontentsline{toc}{chapter}{#2}
+			\markboth{\MakeMarkcase{#2}}{}%
+		}
+	}
 }
 
 \ProvideDocumentCommand{\addsec}{ s o m }{%
- \section*{#3}%
- \IfBooleanTF{#1}{
- \markright{}
- }{
-  \IfNoValueTF{#2}{
-   \addxcontentsline{toc}{section}{#3}
-   \markright{\MakeMarkcase{#3}}%
-  }{%
-   \addxcontentsline{toc}{section}{#2}
-   \markright{\MakeMarkcase{#2}}%
-  }
- }
+	\section*{#3}%
+	\IfBooleanTF{#1}{
+		\markright{}
+	}{
+		\IfNoValueTF{#2}{
+			\addxcontentsline{toc}{section}{#3}
+			\markright{\MakeMarkcase{#3}}%
+		}{%
+			\addxcontentsline{toc}{section}{#2}
+			\markright{\MakeMarkcase{#2}}%
+		}
+	}
 }
+
 
 \endinput
