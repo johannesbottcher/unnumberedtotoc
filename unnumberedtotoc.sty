@@ -47,6 +47,8 @@ and that's it}
 	\@ifpackageloaded{tocbasic}{%
 		\setuptoc{toc}{numberline}%
 	}{}}{}
+	\typeout{Nihao}
+	\endinput
 }
 \RequirePackage{xparse}
 
@@ -63,32 +65,41 @@ and that's it}
 }{%
 	\providecommand{\nonumberline}{}
 }
-\providecommand{\addxcontentsline}[3]{\addcontentsline{#1}{#2}{\nonumberline#3}}
+\ProvideDocumentCommand{\addxcontentsline}{ m m m }{\addcontentsline{#1}{#2}{\nonumberline#3}}
 
+\ProvideDocumentCommand{\addparttocentry}{ m }{%
+	\addxcontentsline{toc}{part}{#1}%
+}
+\ProvideDocumentCommand{\addchaptertocentry}{ m }{%
+	\addxcontentsline{toc}{chapter}{#1}%
+}
+\ProvideDocumentCommand{\addsectiontocentry}{ m }{%
+	\addxcontentsline{toc}{section}{#1}%
+}
 \ProvideDocumentCommand{\addpart}{ s o m }{%
 	\part*{#3}%
+	\markboth{}{}
 	\IfBooleanTF{#1}{
-		\markboth{}{}
 	}{
 		\IfNoValueTF{#2}{
-			\addxcontentsline{toc}{part}{#3}
+			\addparttocentry{#3}
 			\markboth{\MakeMarkcase{#3}}{}%
 		}{%
-			\addxcontentsline{toc}{part}{#2}
+			\addparttocentry{#2}
 			\markboth{\MakeMarkcase{#2}}{}%
 		}
 	}
 }
 \ProvideDocumentCommand{\addchap}{ s o m }{%
 	\chapter*{#3}%
+	\markboth{}{}
 	\IfBooleanTF{#1}{
-		\markboth{}{}
 	}{
 		\IfNoValueTF{#2}{
-			\addxcontentsline{toc}{chapter}{#3}
+			\addchaptertocentry{#3}
 			\markboth{\MakeMarkcase{#3}}{}%
 		}{%
-			\addxcontentsline{toc}{chapter}{#2}
+			\addchaptertocentry{#2}
 			\markboth{\MakeMarkcase{#2}}{}%
 		}
 	}
@@ -96,18 +107,17 @@ and that's it}
 
 \ProvideDocumentCommand{\addsec}{ s o m }{%
 	\section*{#3}%
+	\markright{}
 	\IfBooleanTF{#1}{
-		\markright{}
 	}{
 		\IfNoValueTF{#2}{
-			\addxcontentsline{toc}{section}{#3}
+			\addsectiontocentry{#3}
 			\markright{\MakeMarkcase{#3}}%
 		}{%
-			\addxcontentsline{toc}{section}{#2}
+			\addsectiontocentry{#2}
 			\markright{\MakeMarkcase{#2}}%
 		}
 	}
 }
-
 
 \endinput
