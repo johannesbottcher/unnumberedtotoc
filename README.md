@@ -11,21 +11,22 @@ commands for the standard classes but clear the header as well.
 Classes of the KOMA-script bundle provide those commands by
 default. This package is pretty useless with a KOMA class.
 
-## Using this package 
+## Downloading this package 
 
 1. Clone or download the repository by clicking on the big green
-button in the top right.
+   button in the top right.
 
 2. Unzip if necessary and move the three files to your project
-repository. 
+   repository. 
 
-3. If you need the functionality of this package more than once, have
-a look at 
-[Where do I place my own `.sty` files, to make them available to all my `.tex` files?](http://tex.stackexchange.com/q/1137).
+3. If you need the functionality of this package more than once,
+   have a look at 
+   [Where do I place my own `.sty` files, to make them available to all my `.tex` files?](http://tex.stackexchange.com/q/1137)
+   to make it available
+   to all your projects.
 
-
-4. Once the the files are properly set up, use the package with the
-standard command `\usepackage`.
+4. Once the the files are properly set up, you can use the
+   package like any other LaTeX package.
 
 ### Available options
 
@@ -36,7 +37,7 @@ terminal output
 - indentunnumbered    
 Indent the unnumbered entries in the table of contents
 
-## Example file 
+## Usage and eExample file 
 
 ```source=LaTeX
 \documentclass{book}
