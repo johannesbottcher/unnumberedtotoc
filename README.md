@@ -56,3 +56,12 @@ Indent the unnumbered entries in the table of contents
 \section{numbered}
 \end{document}
 ```
+
+
+## Isues
+
+If you have a general *how to use* question, please ask on
+LaTeX-community.org
+
+If you discovered a bug, please open a github issue. Don't forget
+to provide a minimal working example to reproduce the problem. 
