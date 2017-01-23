@@ -58,7 +58,7 @@ Indent the unnumbered entries in the table of contents
 ```
 
 
-## Isues
+## Issues
 
 If you have a general *how to use* question, please ask on
 LaTeX-community.org
