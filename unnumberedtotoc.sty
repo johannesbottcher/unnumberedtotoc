@@ -69,8 +69,9 @@ and that's it}
 \ProvideDocumentCommand{\addsectiontocentry}{ m }{%
 	\addxcontentsline{toc}{section}{#1}%
 }
-
-
+\ProvideDocumentCommand{\addsubsectiontocentry}{ m }{%
+	\addxcontentsline{toc}{subsection}{#1}%
+}
 
 % Note to self, works with xparse 2017/02/10
 \ProvideDocumentCommand{\addpart}{ s O{#3} m }{%
@@ -98,6 +99,15 @@ and that's it}
 	\IfBooleanTF{#1}{%
 	}{%
 			\addsectiontocentry{#2}
+			\markright{\MakeMarkcase{#2}}%
+	}
+}
+\ProvideDocumentCommand{\addsubsec}{ s O{#3} m }{%
+	\subsection*{#3}%
+	\markright{}
+	\IfBooleanTF{#1}{%
+	}{%
+			\addsubsectiontocentry{#2}
 			\markright{\MakeMarkcase{#2}}%
 	}
 }
